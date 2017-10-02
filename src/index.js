@@ -39,28 +39,6 @@ app.post('/slack/events/components', (req, res) => {
   const body = JSON.parse(req.body.payload);
 
   if (body.token === process.env.SLACK_VERIFICATION_TOKEN) {
-    switch (body.type) {
-      case 'dialog_submission': {
-        res.send('');
-        axios.post('https://slack.com/api/chat.postMessage', qs.stringify({
-          token: process.env.SLACK_ACCESS_TOKEN,
-          channel: body.submission.feature,
-          text: `New bug report from <@${body.user.id}>`,
-          attachments: JSON.stringify([{
-            title: body.submission.title,
-            text: body.submission.description,
-            fields: [
-              {
-                title: 'Reproduction steps',
-                value: body.submission.reproduction,
-              },
-            ],
-          }]),
-        })).then(result => console.log(result));
-        break;
-      }
-      default: res.sendStatus(500);
-    }
   } else { res.sendStatus(500); }
 });
 
